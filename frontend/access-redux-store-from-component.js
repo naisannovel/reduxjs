@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchDish, addDish } from "../actionCreators";
 
@@ -15,14 +15,21 @@ const mapDispatchToProps = dispatch =>{
     }
 }
 
-const accessReduxStoreFromComponent = () => {
+const accessReduxStoreFromComponent = (props) => {
 
-  console.log(props.dish);
 
-  props.fetchDish()
-  props.addDishes({name:'burger'})
+  useEffect(  props.fetchDish() ,[])
+
+  props.addDishes({name:'burger'})  // this method will call in form onSubmitHandler
   
-  return <div>redux js</div>;
+  if(props.dish.isLoading){
+    return // Loading Component 
+  }else if(props.dish.errMsg !== null){
+    return // error component or alert
+  }else{
+    return // display dish item
+  }
+
 };
 
 export default connect(mapStateToProps,mapDispatchToProps)(accessReduxStoreFromComponent);
