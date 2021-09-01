@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { addComment,fetchDish } from "../actionCreators";
 
 const mapStateToProps = state => {
   return {
@@ -9,10 +10,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch =>{
     return {
-        addComment: ()=> dispatch({
-            type: 'TEST',
-            payload: 'naisan novel'     // payload will be object
-        })
+        fetchDishes: ()=> dispatch(fetchDish())
     }
 }
 
@@ -20,7 +18,7 @@ const accessReduxStoreFromComponent = () => {
 
   console.log(props.dish);
 
-  props.addComment()
+  props.fetchDish()
   
   return <div>{props.dish}</div>;
 };
