@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { addComment,fetchDish } from "../actionCreators";
+import { fetchDish, addDish } from "../actionCreators";
 
 const mapStateToProps = state => {
   return {
@@ -10,7 +10,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch =>{
     return {
-        fetchDishes: ()=> dispatch(fetchDish())
+        fetchDishes: ()=> dispatch(fetchDish()),
+        addDishes: (data)=> dispatch(addDish(data))
     }
 }
 
@@ -19,8 +20,9 @@ const accessReduxStoreFromComponent = () => {
   console.log(props.dish);
 
   props.fetchDish()
+  props.addDishes({name:'burger'})
   
-  return <div>{props.dish}</div>;
+  return <div>redux js</div>;
 };
 
 export default connect(mapStateToProps,mapDispatchToProps)(accessReduxStoreFromComponent);

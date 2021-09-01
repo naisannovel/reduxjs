@@ -1,4 +1,6 @@
 import * as actionTypes from './actionTypes';
+import axios from 'axios';
+import { baseURL } from './baseURL';
 
 // ---------------------GET----------------------------------
 
@@ -19,10 +21,27 @@ export const fetchDish = ()=>{
     return dispatch =>{
         dispatch(loadingDish())
 
-        setTimeout(()=>{
-            dispatch(loadDish(data))            // here we will call data from server
-        },2000)
+        axios.get(baseURL + '/url')
+        .then(response => response.data)
+        .then(dishes => dispatch(loadDish(dishes)))
     }
 }
 
-// -------------------------------------------------------------------
+// ---------------------------POST----------------------------------------
+
+export const dishConcat = newDish =>{
+    return {
+        type: actionTypes.ADD_DISH,
+        payload: newDish
+    }
+}
+
+export const addDish = (data)=>{
+    return dispatch =>{
+        const dishObj = data
+
+        axios.post(baseURL + '/add-dish',dishObj)
+        .then(response => response.data)
+        .then(newDishData => dispatch(dishConcat(newDishData)))
+    }
+}

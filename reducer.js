@@ -15,23 +15,19 @@ const dishReducer = (dishState = { isLoading: false, dish: [] }, action) => {
         isLoading: false,
         dish: action.payload,
       };
+    
+    case actionTypes.ADD_DISH:
+      return {
+        ...dishState,
+        dish: dishState.dish.concat(action.payload)
+      }
 
     default:
       return dishState;
   }
 };
 
-const commentReducer = (commentState = {}, action) => {
-  switch (action.type) {
-    case actionTypes.ADD_COMMENT:
-    // return ...;
-
-    default:
-      return commentState;
-  }
-};
 
 export const reducer = combineReducers({
   dish: dishReducer,
-  comment: commentReducer,
 });
