@@ -4,11 +4,13 @@ import jwt_decode from 'jwt-decode';
 export const authenticate = (token, cb) => {
     if (typeof window !== 'undefined') {
         localStorage.setItem('jwt', JSON.stringify(token));
-        cb();   // token save korar por kono kaj korar jonno cb use kora hoyce
+        cb();   // token save korar por kono kaj korar jonno cb use kora hoyce.like server theke 
+        //response asle amder form empty korte hobe and server jokhon response korbe login or signup 
+        //howar por tokhon token save korar jonno,tokhon ata call korte hobe and cb ar vitor form khali korte hobe
     }
 }
 
-// user Authenticated kina ata janar jonno ai func use korte pari
+// user Authenticated kina ata janar jonno ai func use korte pari ata boolean value return kore.ata privateroute a use kora hoy
 export const isAuthenticated = () => {
     if (typeof window === 'undefined') return false;
     if (localStorage.getItem('jwt')) {
@@ -33,7 +35,7 @@ export const userInfo = () => {
 export const singout = cb => {
     if (typeof window !== 'undefined') {
         localStorage.removeItem('jwt');
-        cb();   // cb use for after signout redirect us in home component or other
+        cb();   // cb use for after signout redirect us in home component or other using useHistory
     }
 }
 

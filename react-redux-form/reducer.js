@@ -8,7 +8,7 @@ export const Reducer = combineReducers({
     dishes: dishReducer,
     comments: commentReducer,
     // --------------------------------
-    ...createForms({
+    ...createForms({            // 3 min
         feedback: InitialContactForm,
         // anotherForm: another-form-data-from-form-file
     })
