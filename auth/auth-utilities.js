@@ -31,14 +31,6 @@ export const userInfo = () => {
     return { ...decoded, token: jwt }
 }
 
-// signout ar jonno ai func use korte pari
-export const singout = cb => {
-    if (typeof window !== 'undefined') {
-        localStorage.removeItem('jwt');
-        cb();   // cb use for after signout redirect us in home component or other using useHistory
-    }
-}
-
 // login kora thakle amra jeno login page ta r dekhte na pari tai login component a
 // ai func ta use korte hobe render ar 1st e
 const redirectUser = () => {

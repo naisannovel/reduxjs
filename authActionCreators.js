@@ -1,38 +1,59 @@
 import * as actionTypes from './actionTypes';
+import { API } from './baseURL';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
-export const authSuccess = (token, userId) => {
+
+export const isLoading = loading =>{
+    return {
+        type: actionTypes.AUTH_LOADING,
+        payload: loading
+    }
+}
+
+export const authSuccess = (token,id) =>{
     return {
         type: actionTypes.AUTH_SUCCESS,
-        payload: {
-            token: token,
-            userId: userId,
+        payload:{
+            token, id
         }
     }
 }
 
-export const auth = (email, password, mode) => dispatch => {
-    const authData = {
-        email: email,
-        password: password,
-        returnSecureToken: true,
+export const authFailed = msg =>{
+    return {
+        type: actionTypes.AUTH_FAILED,
+        payload: msg
     }
+}
 
-    let authUrl = null;
-    if (mode === "Sign Up") {
-        authUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
-    } else {
-        authUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
-    }
-    const API_KEY = "AIzaSyBv7bZesaOyi4x998HIf3hw6VBlsLwbJdE";
-    axios.post(authUrl + API_KEY, authData)
-        .then(response => {
-            localStorage.setItem('token', response.data.idToken);
-            localStorage.setItem('userId', response.data.localId);
-            const expirationTime = new Date(new Date().getTime() + response.data.expiresIn * 1000);
-            localStorage.setItem('expirationTime', expirationTime);
-            dispatch(authSuccess(response.data.idToken, response.data.localId));
+export const auth = (data,mode,cb)=>{
+    return dispatch => {
+        dispatch(isLoading(true))
+        let authUrl = null;
+        if(mode === 'signup'){
+            authUrl = `${API}/user/signup`
+        }else if(mode === 'login'){
+            authUrl = `${API}/user/login`
+        }
+        axios.post(authUrl,data)
+        .then(response =>{
+            dispatch(isLoading(false))
+            localStorage.setItem('token',JSON.stringify(response.data.token));
+            localStorage.setItem('_id',response.data.data._id);
+            const { exp } = jwt_decode(response.data.token);
+            const expirationTime = new Date(exp * 1000);
+            localStorage.setItem('expirationTime',expirationTime);
+            dispatch(authSuccess(response.data.token,response.data.data._id));
+            cb()
+            
         })
+        .catch(err=>{
+            dispatch(isLoading(false))
+            dispatch(authFailed(err.response.data))
+            setTimeout(()=>dispatch(authFailed(null)),2000)
+        })
+    }
 }
 
 export const logout = () => {

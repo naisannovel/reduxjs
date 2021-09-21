@@ -53,3 +53,40 @@ export const addDish = (data)=>{
         .then(newDishData => dispatch(dishConcat(newDishData)))
     }
 }
+
+//-----------------------------------update-------------------------------------
+
+export const servicePriceUpdate = (id,value,cb) => dispatch => {
+    dispatch(loadingService(true));
+    const { token } = isAuthenticated() ? userInfo() : "";
+    axios.put(`${API}/service/${id}`,value,{
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": `Bearer ${token}`,
+    }
+    })
+    .then(response =>{
+        dispatch(loadingService(false));
+        dispatch(updatedService(response?.data))
+        cb()
+        dispatch(serviceUpdateMsg('successfully updated'));
+        setTimeout(()=>dispatch(serviceUpdateMsg(null)),2000)
+    })
+}
+
+//-----------------------------Delete-----------------------------------------
+
+export const deleteService = id => dispatch =>{
+    dispatch(loadingService(true));
+    const { token } = isAuthenticated() ? userInfo() : "";
+    axios.delete(`${API}/service/${id}`,{
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }})
+    .then(response => {
+            dispatch(loadingService(false));
+            dispatch(removeService(id));
+        })
+    .catch(err => {
+            dispatch(loadingService(false))})
+}
